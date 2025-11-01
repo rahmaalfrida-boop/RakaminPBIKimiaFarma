@@ -1,0 +1,33 @@
+SELECT distinct transaction_id, date, customer_name, T1.branch_id, 
+branch_name, kota, provinsi, T2.rating as rating_cabang, T1.product_id, 
+product_name, T1.price as actual_price, discount_percentage,
+
+case
+when T1.price <= 50000 then 0.1
+when T1.price >50000 and T1.price <10000 then 0.15
+when T1.price >100000 and T1.price <300000 then 0.2
+when T1.price >300000 and T1.price <500000 then 0.25
+else 0.30
+end as gross_laba_percentage,
+
+T1.price - (T1.price * discount_percentage) as net_sales, 
+(T1.price - (T1.price * discount_percentage)) * (case
+when T1.price <= 50000 then 0.1
+when T1.price >50000 and T1.price <10000 then 0.15
+when T1.price >100000 and T1.price <300000 then 0.2
+when T1.price >300000 and T1.price <500000 then 0.25
+else 0.30
+end) as net_profit, T1.rating as rating_transaction
+
+FROM `rakaminproject-475607.kimia_farma.kf_final_transaction`as T1
+
+left join `rakaminproject-475607.kimia_farma.kf_kantor_cabang` as T2
+on T1.branch_id = T2.branch_id
+
+left join `rakaminproject-475607.kimia_farma.kf_product` as T3
+on T1.product_id = T3.product_id
+
+
+
+
+
